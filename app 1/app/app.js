@@ -9,7 +9,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
+const path = require('path');
+const csvWriter = require('csv-write-stream');
 
+const csvFilePath = path.join(__dirname, 'data.csv');
 var app = express();
 
 app.set('port', process.env.PORT || 3000); 
@@ -19,11 +22,8 @@ app.use(express.static(__dirname + '/app/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 require('./app/routes')(app); 
 
-const fs = require('fs');
-const path = require('path');
-const csvWriter = require('csv-write-stream');
 
-const csvFilePath = path.join(__dirname, 'data.csv');
+
 
 app.post('/Connect', async (req, res) => {
   try {
