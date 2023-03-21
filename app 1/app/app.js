@@ -19,7 +19,7 @@ app.use(express.static(__dirname + '/app/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 require('./app/routes')(app); 
 
-aconst fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 const csvWriter = require('csv-write-stream');
 
