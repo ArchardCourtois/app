@@ -28,6 +28,7 @@ app.post('/Connect', async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
 
+
   const csvWriter = createCsvWriter({
     path: csvFilePath,
     header: [
@@ -38,15 +39,13 @@ app.post('/Connect', async (req, res) => {
   });
 
   const data = [{ password, email }];
+  try {
+    await csvWriter.writeRecords(data);
+    res.send('Data saved successfully.');
+  } catch (error) {
+    console.error(error);
 
-  csvWriter
-    .writeRecords(data)
-    .then(() => {
-      res.send('Data saved successfully.');
-    })
-    .catch((error) => {
-      console.error(error);
-      res.send('An error occurred.');
+
     });
 });
 
