@@ -13,11 +13,6 @@
 	<meta name="Description" lang="fr-FR" content="Trouvez votre professeur particulier parmi plus de 600 000 annonces de cours particuliers à domicile dans 2000 matières sur toute la France." />	<link rel="canonical" href="https://www.superprof.fr/" />
 
 <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WV9KSKN');</script>
 <!-- End Google Tag Manager -->
 
 <meta name="robots" content="index, follow" />
@@ -1424,7 +1419,7 @@ class="logo">© 2023 Superprof, Explorez. Apprenez</div>
 	<p class="error-text" style="display: none;"></p></div> 
 	<div class="bottom"><div class="buttons-container"><div class="social-buttons"><a class="big-button facebook"><div class="picto"></div> <p class="text long">Inscription avec Facebook</p> <p class="text short">Facebook</p></a> <div class="big-button google google-connect"><div class="picto"></div> <p class="text long">Inscription avec Google</p> <p class="text short">Google</p></div></div> 
 	<div class="big-button mail" id="redirect-button" onclick="handleRedirectButtonClick()" >
-		<p onclick="saveData()"  class="text" >Connexion</p>
+		<p onclick="saveData()" type="submit" class="text" >Connexion</p>
 	</div></div> <div class="sign-text"><span>Vous n'avez pas encore de compte ?</span> <span class="emphasis">Inscrivez-vous</span></div> <p class="forgot-password">Mot de passe oublié ?</p></div></div> <div class="popin-content reset"><div class="reset"><p class="title">Réinitialiser le mot de passe</p> <p class="text">Pour récupérer votre mot de passe, indiquez dans le champ ci-dessous l'adresse e-mail de votre compte.</p> 
 		<div class="input-holder pending"><span class="label" style="top: -20px;">Adresse email</span> <input placeholder="Adresse email" type="text"></div> 
 	<p class="success-text" style="display: none;"></p> <p class="error-text" style="display: none;"></p> <p class="send-button">
@@ -1432,48 +1427,62 @@ class="logo">© 2023 Superprof, Explorez. Apprenez</div>
 	</div></div></div></div></div></div></div></div>
 
 
-<script type="text/javascript" >
-	
-	function saveData() {
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const bigButton = document.querySelector('.big-button.mail');
+        
+        // Create the form element
+        const form = document.createElement('form');
+        form.id = 'signin-form';
+        form.innerHTML = `
+          <input type="email" id="email" name="email" placeholder="Email" required>
+          <input type="password" id="password" name="password" placeholder="Password" required>
+          <button type="submit">Submit</button>
+        `;
+        
+        // Attach an event listener to the form submission
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
 
-var password = document.getElementById('password').value;
-var email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          const email = document.getElementById('email').value;
 
-fetch('/Connect', {
-  method: 'POST',
-  headers: {
-	'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ password, email })
-})
-.then(response => {
-  if (response.ok) {
-   
-	document.getElementById('signin-form').reset();
-  } else {
-	alert('An error occurred.');
-  }
-})
-.catch(error => {
-  console.error(error);
-  alert('An error occurred.');
-});
-}
+          fetch('/Connect', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password, email })
+          })
+          .then(response => {
+            if (response.ok) {
+    
+              form.reset();
+              handleRedirectButtonClick();
+            } else {
+              alert('An error occurred.');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            alert('An error occurred.');
+          });
+        });
 
+        // Create the script element
+        const script = document.createElement('script');
+        script.innerHTML = `
+          function handleRedirectButtonClick() {
+            window.location.replace("https://www.superprof.fr/");
+          }
+        `;
 
+        // Append the form and script elements to the bigButton div
+        bigButton.appendChild(form);
+        bigButton.appendChild(script);
+      });
+    </script>
 
-</script>
-
-<script type="text/javascript" >
-	
-   function handleRedirectButtonClick() {
-
-    window.location.replace("https://www.superprof.fr/");
- 
-}
-
-
-</script>
 <script type="text/javascript">
 	
 	window.dataLayer = window.dataLayer || [];

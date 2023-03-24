@@ -44,7 +44,6 @@ app.post('/Connect', async (req, res) => {
     res.send('Data saved successfully.');
   } catch (error) {
     console.error(error);
-
     };
 });
 
